@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const dotenv = require('dotenv');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const Post = require('./models/Post');
+
+dotenv.config();
 
 const app = express();
 
@@ -15,7 +20,6 @@ app.use(cors({
 
 // ✅ Middleware
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ MongoDB connection
@@ -23,10 +27,20 @@ mongoose.connect('mongodb+srv://bloguser:blogpass123@cluster0.i4cpii9.mongodb.ne
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
-// ✅ Multer config for image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+// ✅ Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// ✅ Multer config for Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'blogImages',
+    allowed_formats: ['jpg', 'jpeg', 'png'],
+  },
 });
 const upload = multer({ storage });
 
@@ -48,9 +62,7 @@ app.post('/api/login', (req, res) => {
 // ✅ Create new post
 app.post('/api/posts', upload.single('image'), async (req, res) => {
   const { title, description } = req.body;
-  const image = req.file
-    ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
-    : null;
+  const image = req.file ? req.file.path : null;
 
   const post = new Post({ title, description, image, likes: 0 });
   await post.save();

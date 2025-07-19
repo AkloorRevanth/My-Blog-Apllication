@@ -1,7 +1,5 @@
 const API = 'https://my-blog-apllication.onrender.com/api';
 
-
-
 document.getElementById('postForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const formData = new FormData();
