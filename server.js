@@ -26,6 +26,7 @@ const upload = multer({ storage });
 const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'admin123';
 
+// Admin login route
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
@@ -70,5 +71,9 @@ app.post('/api/posts/:id/like', async (req, res) => {
   }
 });
 
+// Root route for Render deployment test
+app.get("/", (req, res) => {
+  res.send("🚀 Welcome to My Blog API! Server is live.");
+});
 
 app.listen(5000, () => console.log('🚀 Server running at http://localhost:5000'));
