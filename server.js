@@ -2,30 +2,38 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
+const path = require('path');
 const Post = require('./models/Post');
 
 const app = express();
-app.use(cors());
+
+// ✅ Correct CORS: enable it before routes
+app.use(cors({
+  origin: 'https://akloorrevanth.github.io', // GitHub Pages frontend
+  methods: ['GET', 'POST', 'DELETE'],
+}));
+
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB connect
+// 🔗 MongoDB connection
 mongoose.connect('mongodb+srv://bloguser:blogpass123@cluster0.i4cpii9.mongodb.net/daily-blog?retryWrites=true&w=majority&appName=Cluster0')
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
-// Multer setup for image upload
+// 📷 Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
 
-// Admin credentials
+// 🔐 Admin credentials
 const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'admin123';
 
-// Admin login route
+// ✅ API Routes
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
@@ -35,13 +43,11 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Get all posts
 app.get('/api/posts', async (req, res) => {
   const posts = await Post.find().sort({ createdAt: -1 });
   res.json(posts);
 });
 
-// Create post
 app.post('/api/posts', upload.single('image'), async (req, res) => {
   const { title, description } = req.body;
   const image = req.file ? req.file.path : null;
@@ -50,13 +56,11 @@ app.post('/api/posts', upload.single('image'), async (req, res) => {
   res.status(201).json(post);
 });
 
-// Delete post
 app.delete('/api/posts/:id', async (req, res) => {
   await Post.findByIdAndDelete(req.params.id);
   res.status(204).send();
 });
 
-// Like post
 app.post('/api/posts/:id/like', async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -70,22 +74,11 @@ app.post('/api/posts/:id/like', async (req, res) => {
   }
 });
 
-const cors = require('cors');
-
-app.use(cors({
-  origin: 'https://akloorrevanth.github.io', // your GitHub Pages domain
-  methods: ['GET', 'POST', 'DELETE'],
-}));
-
-// Root route for Render deployment test
+// 🌐 Health check or root route
 app.get("/", (req, res) => {
   res.send("🚀 Welcome to My Blog API! Server is live.");
 });
 
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
-
+// 🚀 Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-
