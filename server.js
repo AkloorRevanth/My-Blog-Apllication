@@ -34,14 +34,16 @@ const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'admin123';
 
 // ✅ API Routes
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    res.status(200).json({ message: 'Login success' });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
-  }
+app.post('/api/posts', upload.single('image'), async (req, res) => {
+  const { title, description } = req.body;
+  const image = req.file
+    ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+    : null;
+  const post = new Post({ title, description, image, likes: 0 });
+  await post.save();
+  res.status(201).json(post);
 });
+
 
 app.get('/api/posts', async (req, res) => {
   const posts = await Post.find().sort({ createdAt: -1 });

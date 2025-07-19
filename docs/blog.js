@@ -1,4 +1,4 @@
-const API = 'https://my-blog-apllication.onrender.com';
+const API = 'https://my-blog-apllication.onrender.com/api';
 
 
 
