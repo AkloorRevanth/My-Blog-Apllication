@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  image: { type: String },
-  likes: { type: Number, default: 0 },
-}, { timestamps: true }); // ✅ Needed for createdAt sorting
+  title: String,
+  description: String,
+  image: String,
+  likes: {
+    type: Number,
+    default: 0
+  }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Post', postSchema);

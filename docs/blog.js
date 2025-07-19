@@ -32,7 +32,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     body: JSON.stringify({ username, password })
   });
 
-  if (res.ok) {
+  const data = await res.json();
+
+  if (data.message === 'Login success') {
     localStorage.setItem('isAdmin', 'true');
     document.getElementById('loginStatus').textContent = '✅ Logged in as Admin';
     document.getElementById('logoutBtn').style.display = 'inline';
@@ -41,6 +43,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     document.getElementById('loginStatus').textContent = '❌ Invalid credentials';
   }
 });
+
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
   localStorage.removeItem('isAdmin');  // Clear admin flag on logout
