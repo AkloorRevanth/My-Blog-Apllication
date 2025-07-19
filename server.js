@@ -70,6 +70,13 @@ app.post('/api/posts/:id/like', async (req, res) => {
   }
 });
 
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'https://akloorrevanth.github.io', // your GitHub Pages domain
+  methods: ['GET', 'POST', 'DELETE'],
+}));
+
 // Root route for Render deployment test
 app.get("/", (req, res) => {
   res.send("🚀 Welcome to My Blog API! Server is live.");
