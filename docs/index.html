@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Daily Blog</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>My Daily Blog</h1>
+
+  <!-- Login Form -->
+  <form id="loginForm">
+    <input type="text" id="adminUsername" placeholder="Username" required>
+    <input type="password" id="adminPassword" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- Login Status + Logout Button -->
+  <div id="authContainer" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+    <p id="loginStatus" style="margin: 0;">Not logged in</p>
+    <button id="logoutBtn" style="display: none;">Logout</button>
+  </div>
+
+  <hr>
+
+  <!-- Post Creation Form -->
+  <form id="postForm" enctype="multipart/form-data">
+    <input type="text" id="title" placeholder="Post Title" required>
+    <textarea id="description" placeholder="Post Description" required></textarea>
+    <input type="file" id="image" accept="image/*">
+    <button type="submit">Post</button>
+  </form>
+
+  <hr>
+
+  <!-- Posts Section -->
+  <div id="posts"></div>
+
+  <script src="blog.js"></script>
+</body>
+</html>
