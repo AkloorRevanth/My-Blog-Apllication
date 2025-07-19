@@ -1,4 +1,5 @@
-const API = 'http://localhost:5000/api';
+const API = '/api'; // ✅ relative path, since it's served from same server
+
 
 document.getElementById('postForm').addEventListener('submit', async function(e) {
   e.preventDefault();
@@ -66,7 +67,8 @@ async function loadPosts() {
     div.innerHTML = `
       <h3>${post.title}</h3>
       <p>${post.description}</p>
-      ${post.image ? `<img src="http://localhost:5000/${post.image}" width="200">` : ''}
+      ${post.image ? `<img src="${post.image}" width="200">` : ''}
+
       <p>👍 Likes: ${post.likes} <button onclick="likePost('${post._id}')">Like</button></p>
       <small>${new Date(post.createdAt).toLocaleString()}</small>
       ${isAdmin ? `<button onclick="deletePost('${post._id}')">🗑 Delete</button>` : ''}
