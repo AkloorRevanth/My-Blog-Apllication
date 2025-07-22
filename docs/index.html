@@ -25,9 +25,11 @@
 
   <!-- Post Creation Form -->
   <form id="postForm" enctype="multipart/form-data">
+
     <input type="text" id="title" placeholder="Post Title" required>
     <textarea id="description" placeholder="Post Description" required></textarea>
-    <input type="file" id="image" accept="image/*">
+    <input type="file" id="image" name="image" accept="image/*">
+
     <button type="submit">Post</button>
   </form>
 
