@@ -71,9 +71,15 @@ app.post('/api/posts', upload.single('image'), async (req, res) => {
 
 // ✅ Get all posts
 app.get('/api/posts', async (req, res) => {
-  const posts = await Post.find().sort({ createdAt: -1 });
-  res.json(posts);
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.json(posts);
+  } catch (err) {
+    console.error('❌ Error fetching posts:', err);
+    res.status(500).json({ message: 'Internal server error while fetching posts' });
+  }
 });
+
 
 // ✅ Delete a post
 app.delete('/api/posts/:id', async (req, res) => {
